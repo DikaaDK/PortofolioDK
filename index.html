@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portofolio | Dikaa DK</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body class="antialiased text-gray-800">
+    <header>
+      <nav>
+        <div id="overlay" class="overlay"></div>
+
+        <div id="dynamic-island" class="dynamic-island island-default">
+          <div id="island-default" class="island-content">
+            <div class="island-icon text-white flex items-center space-x-2">
+            </div>
+          </div>
+
+          <div id="island-expanded" class="island-content hidden">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 20px; color: white;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div id="close-menu" style="cursor: pointer;">
+                </div>
+              </div>
+
+              <div style="flex-grow: 1;">
+                <a href="#home" class="nav-item active" data-section="home" style="--i: 1;">Home</a>
+                <a href="#about" class="nav-item" data-section="about" style="--i: 2;">About Me</a>
+                <a href="#projects" class="nav-item" data-section="services" style="--i: 3;">My Project</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <section
+      id="home"
+      class="min-h-screen flex items-center justify-center py-16"
+    >
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="w-full max-w-6xl mx-auto">
+          <div
+            class="flex flex-col md:flex-row items-center justify-center md:justify-between"
+          >
+            <div class="w-full md:w-5/12 flex justify-center mb-10 md:mb-0">
+              <div class="relative">
+                <div
+                  class="absolute inset-0 bg-indigo-600 rounded-full opacity-10 transform -rotate-6"
+                ></div>
+                <img
+                  src="https://aws-images-prod.sindonews.net/dyn/600/pena/sindo-article/original/2022/04/16/ANIME0010.jpg"
+                  alt="Dika Portrait"
+                  class="rounded-full w-64 h-64 object-cover shadow-xl relative z-10"
+                />
+              </div>
+            </div>
+
+            <div class="w-full md:w-7/12 text-center md:text-left">
+              <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
+                Hi! I'm <span class="text-blue-600">Dika</span>
+              </h1>
+              <div class="typing-container flex justify-center md:justify-start items-center mb-8">
+                <div class="h-10 flex items-center justify-center">
+                  <span id="typing-text" class="text-2xl font-semibold text-blue-600"></span>
+                  <span class="cursor">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                <a
+                  href="#projects"
+                  class="bg-blue-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                  View Projects
+                </a>
+                <a
+                  href="#" id="lets-talk-link"
+                  class="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  Let's Talk
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="py-24 bg-white">
+      <div class="container mx-auto px-6 md:px-12 lg:px-20">
+        <h2
+          class="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-16"
+        >
+          About <span class="text-blue-600">Me</span>
+        </h2>
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <div class="lg:w-1/2 relative">
+            <div class="relative w-full max-w-md mx-auto">
+                <div
+                    class="absolute inset-0 bg-indigo-500 opacity-10 rounded-xl transform rotate-3 scale-105 blur-lg z-0"
+                ></div>
+                <img
+                    id="myImage"
+                    src="https://aws-images-prod.sindonews.net/dyn/600/pena/sindo-article/original/2022/04/16/ANIME0010.jpg"
+                    alt="Rei Working"
+                    class="relative z-10 rounded-xl shadow-2xl border-4 border-white w-full h-auto"/>
+                <div
+                    id="myButton"
+                    class="absolute -bottom-6 -left-6 bg-white rounded-lg p-4 shadow-lg flex items-center space-x-4 z-20 cursor-pointer">
+                    <div
+                        class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                        <i data-feather="code" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="lg:w-1/2">
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+              Frontend Developer & UI/UX Designer
+            </h3>
+            <p class="text-gray-600 text-lg mb-6">
+              "I’m Dika, a programmer focused on web development.
+               I prioritize clean code and user experience,
+               always looking for effective solutions to every development challenge.
+                With my skills and a passion for continuous learning,
+                 I’m ready to make a meaningful contribution to every project I work on."
+            </p>
+            <div class="grid grid-cols-2 gap-4 mb-10">
+              <div
+                class="bg-gray-50 rounded-lg p-4 shadow-md hover:shadow-lg transition-all"
+              >
+                <h4 class="font-bold mb-2 text-blue-600">Frontend</h4>
+                <p class="text-gray-700 text-sm">
+                  HTML, CSS, JS, Tailwind, Boostrap, Livewire
+                </p>
+              </div>
+              <div
+                class="bg-gray-50 rounded-lg p-4 shadow-md hover:shadow-lg transition-all"
+              >
+                <h4 class="font-bold mb-2 text-blue-600">Design</h4>
+                <p class="text-gray-700 text-sm">Figma, Canva, Photoshop</p>
+              </div>
+              <div
+                class="bg-gray-50 rounded-lg p-4 shadow-md hover:shadow-lg transition-all"
+              >
+                <h4 class="font-bold mb-2 text-blue-600">Backend</h4>
+                <p class="text-gray-700 text-sm">PHP, Laravel </p>
+              </div>
+              <div
+                class="bg-gray-50 rounded-lg p-4 shadow-md hover:shadow-lg transition-all"
+              >
+                <h4 class="font-bold mb-2 text-blue-600">Other</h4>
+                <p class="text-gray-700 text-sm">...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="py-24 bg-gray-50">
+      <div class="container mx-auto px-6 md:px-12 lg:px-20">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-16">
+          My <span class="text-blue-600">Projects</span>
+        </h2>
+        <div id="project-card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4" >
+          <div class="max-w-sm mx-auto bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
+            <iframe 
+              src="https.://www.vlldalakdoadk.com" 
+              width="100%" 
+              height="250px" 
+              frameborder="0" 
+              allowfullscreen>
+            </iframe>
+            <div class="p-4">
+              <h2 class="text-xl font-bold text-gray-800">Hehoo</h2>
+              <p class="text-sm text-gray-600 mt-2">
+                Ini hanya test ygy
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-12">
+          <a href="#" class="inline-flex items-center text-blue-600 hover:text-indigo-800 font-medium">
+            View All Projects
+            <i data-feather="arrow-right" class="w-4 h-4 ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <div class="chatbot-container">
+      <div class="chatbot-button" id="chatbot-toggle">
+          <i data-feather="message-circle" class="w-6 h-6 text-white"></i>
+      </div>
+      <div class="chatbot-panel" id="chatbot-panel">
+          <div class="chatbot-header">
+              <h3 class="font-bold text-gray-800">Chat with Dika Ai</h3>
+              <button id="close-chatbot" class="text-gray-500 hover:text-gray-700">
+                  <i data-feather="x" class="w-5 h-5"></i>
+              </button>
+          </div>
+          <div class="chatbot-messages" id="chatbot-messages">
+              </div>
+          <div class="chatbot-input">
+              <input
+                  type="text"
+                  id="chatbot-input-field"
+                  placeholder="Type something..."
+                  aria-label="Chatbot message input"
+              />
+              <button id="send-message">
+                   <i data-feather="send" class="w-5 h-5"></i>
+              </button>
+          </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="./js/script.js"></script>
+    <script>
+      feather.replace();
+    </script>
+  </body>
+</html>

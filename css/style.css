@@ -1,0 +1,544 @@
+body {
+  font-family: "Space Grotesk", sans-serif;
+  scroll-behavior: smooth;
+  background-color: #f8f9fa;
+}
+
+.section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  font-family: sans-serif; /* Menambahkan font dasar agar konsisten */
+}
+
+.chatbot-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #3b82f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.chatbot-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+}
+
+.chatbot-panel {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: none; /* Controlled by JS */
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chatbot-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding-right: 10px; /* Space for scrollbar */
+  display: flex; /* Menggunakan flex untuk tata letak pesan */
+  flex-direction: column; /* Pesan berjejer vertikal */
+  gap: 10px; /* Jarak antar pesan */
+  scroll-behavior: smooth; /* Gulir halus */
+}
+
+/* Scrollbar Styling */
+.chatbot-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatbot-messages::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* gray-300 */
+  border-radius: 4px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* gray-400 */
+}
+
+.message {
+  max-width: 85%;
+  padding: 10px 14px;
+  /* margin-bottom: 10px; /* Dihapus karena sudah ada gap di .chatbot-messages */
+  border-radius: 18px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word; /* Alternatif untuk word-wrap */
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: bottom; /* Added for better scale animation */
+}
+
+.message.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.bot-message {
+  background-color: #f0f1fe; /* indigo-100 with slight transparency */
+  border-top-left-radius: 4px;
+  align-self: flex-start;
+}
+
+.user-message {
+  background-color: #3b82f6; /* indigo-600 */
+  color: white;
+  border-top-right-radius: 4px;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+/* Styling khusus untuk indikator mengetik (dot dots) */
+/* Menggunakan kelas bot-message yang sudah ada untuk latar belakang dan warna teks */
+.bot-message.typing-indicator {
+  padding: 10px 14px; /* Pastikan padding sama dengan pesan normal */
+  border-radius: 18px; /* Pastikan border-radius sama */
+  background-color: #f0f1fe; /* Latar belakang sama dengan pesan bot */
+  align-self: flex-start; /* Posisikan di kiri */
+  /* Hapus atau override gaya animasi muncul jika tidak diinginkan untuk indikator */
+  transform: none;
+  opacity: 1;
+  transition: none;
+}
+
+/* Gaya untuk kontainer titik-titik di dalam indikator */
+/* Kelas flex, space-x-2, items-center berasal dari Tailwind */
+.bot-message.typing-indicator .flex.space-x-2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+}
+
+/* Gaya untuk titik-titik itu sendiri disediakan oleh Tailwind: w-2, h-2, bg-blue-600, rounded-full, animate-bounce */
+
+.chatbot-input {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.chatbot-input input {
+  flex-grow: 1;
+  padding: 10px 14px;
+  border: 2px solid #e2e8f0; /* gray-200 */
+  border-radius: 30px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  background-color: white;
+  margin-right: 8px; /* Add space between input and button */
+}
+
+.chatbot-input input:focus {
+  outline: none;
+  border-color: #3b82f6; /* indigo-600 */
+}
+
+.chatbot-input button {
+  flex-shrink: 0; /* Prevent button from shrinking */
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #3b82f6; /* indigo-600 */
+  color: white;
+  border: none; /* Remove default button border */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 0; /* Remove default padding */
+}
+
+.chatbot-input button:hover {
+  background-color: #2563eb; /* Warna hover yang sedikit lebih gelap */
+}
+
+.chatbot-input button svg {
+  stroke: white; /* Pastikan ikon Feather berwarna putih */
+}
+
+:root {
+  /* Variabel CSS untuk tema Dynamic Island */
+  --island-bg: #000; /* Warna latar belakang */
+  --island-text: #fff; /* Warna teks */
+  --island-radius: 30px; /* Radius border */
+  --transition-bezier: cubic-bezier(
+    0.16,
+    1,
+    0.3,
+    1
+  ); /* Kurva transisi custom */
+}
+
+/* Styling utama untuk Dynamic Island */
+.dynamic-island {
+  background: rgb(0, 0, 0); /* semi transparan */
+  backdrop-filter: blur(10px); /* efek blur */
+  border-radius: var(--island-radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s var(--transition-bezier);
+  overflow: hidden;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); /* shadow lembut */
+  transform-origin: center;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+/* Isi dari Dynamic Island */
+.island-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  font-family: sans-serif;
+}
+
+/* Ukuran island dalam keadaan default */
+.island-default {
+  width: 150px;
+  height: 40px;
+}
+
+/* Ukuran island saat diperluas */
+.island-expanded {
+  width: 320px;
+  height: 250px;
+}
+
+/* Ikon dalam island (biasanya burger/menu) */
+.island-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+/* Animasi muncul (pop in) */
+@keyframes popIn {
+  0% {
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animasi keluar (pop out) */
+@keyframes popOut {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 0.4s forwards;
+}
+
+.animate-pop-out {
+  animation: popOut 0.3s forwards;
+}
+
+/* Animasikan konten saat muncul */
+.content-appear {
+  opacity: 0;
+  transform: translateY(5px);
+  animation: appear 0.3s forwards 0.1s;
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Styling untuk item navigasi */
+.nav-item {
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  text-decoration: none;
+  display: block;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Responsive styling untuk layar kecil (HP) */
+@media (max-width: 768px) {
+  .dynamic-island {
+    width: 100px;
+    height: 36px;
+  }
+
+  .island-expanded {
+    width: 280px;
+    height: 220px;
+  }
+}
+
+/* Ikon menu burger */
+.menu-icon {
+  position: relative;
+  width: 18px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.menu-icon span {
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.menu-icon span:nth-child(1) {
+  top: 0;
+}
+
+.menu-icon span:nth-child(2) {
+  top: 6px;
+}
+
+.menu-icon span:nth-child(3) {
+  top: 12px;
+}
+
+/* Ketika menu burger aktif, berubah jadi "X" */
+.menu-icon.active span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 5px);
+}
+
+.menu-icon.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-icon.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -5px);
+}
+
+/* Efek transisi antar section */
+.section {
+  transition: all 0.5s ease;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Colors for different sections */
+#home {
+  background-color: #f5f5f7;
+}
+#about {
+  background-color: #eaeaec;
+}
+#services {
+  background-color: #e0e0e2;
+}
+
+/* Overlay saat island diperluas (background hitam transparan) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Indikator halaman/section */
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  margin: 0 3px;
+  transition: all 0.3s ease;
+}
+
+/* Hover indikator */
+.indicator:hover {
+  background-color: white;
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+/* Lebih smooth waktu transisi */
+.island-expanded .nav-item {
+  animation: fadeInUp 0.4s ease forwards;
+  opacity: 0;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.indicator.active {
+  background-color: white;
+  transform: scale(1.3);
+}
+
+.hidden {
+  display: none;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0; /* gray-200 */
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  background-color: white;
+}
+
+.input-group label {
+  position: absolute;
+  left: 1rem;
+  top: 0.75rem;
+  font-size: 1rem;
+  color: #94a3b8; /* gray-400 */
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6; /* indigo-600 */
+}
+
+.input-group input:focus + label,
+.input-group textarea:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group textarea:not(:placeholder-shown) + label {
+  top: -0.75rem;
+  left: 0.75rem;
+  font-size: 0.75rem;
+  padding: 0 0.25rem;
+  background-color: white;
+  color: #3b82f6;
+}
+
+.cursor {
+  border-right: 2px solid #000;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
