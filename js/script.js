@@ -172,25 +172,6 @@ function initChatbot() {
 
   // Fungsi untuk menangani toggle panel chatbot
   function toggleChatbotPanel() {
-    const isHidden = chatbotPanel.style.display !== "flex"; // Periksa apakah panel tersembunyi
-    chatbotPanel.style.display = isHidden ? "flex" : "none"; // Toggle display
-
-    // Tambahkan pesan awal dari bot hanya jika panel ditampilkan dan belum ada pesan
-    if (isHidden && chatbotMessages.children.length === 0) {
-      removeTypingIndicator(); // Pastikan tidak ada indikator jika ini adalah pesan awal
-      addMessage(
-        "Halo! Aku Jeccelyn asisten Dika, Ada yang bisa aku bantu?",
-        "bot"
-      );
-    }
-    // Anda bisa menambahkan logika lain di sini jika panel ditutup
-    // Contoh: membersihkan pesan saat menutup
-    // else if (!isHidden) {
-    //     chatbotMessages.innerHTML = '';
-    // }
-  }
-
-  function toggleChatbotPanel() {
     const isHidden = chatbotPanel.style.display !== "flex";
     chatbotPanel.style.display = isHidden ? "flex" : "none";
 

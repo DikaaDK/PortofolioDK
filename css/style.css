@@ -2,7 +2,7 @@
 body {
   font-family: "Space Grotesk", sans-serif;
   /* Cool Gradient Background with Animation */
-  background: linear-gradient(#9ddeff, #F5F5FF);
+  background: linear-gradient(#9ddeff, #f5f5ff);
 }
 
 /* Keyframes untuk Animasi Background */
@@ -261,14 +261,10 @@ body {
 }
 
 .user-message {
-  align-self: flex-end; 
+  align-self: flex-end;
   max-width: 60%;
-  word-wrap: break-word; 
- background: linear-gradient(
-    to right,
-    #00aaff,
-    #0066ff
-  );
+  word-wrap: break-word;
+  background: linear-gradient(to right, #00aaff, #0066ff);
   color: white; /* White text for contrast */
   /* Instagram-like rounded corners */
   border-top-left-radius: 15px;
@@ -278,15 +274,11 @@ body {
 }
 
 .bot-message {
-  align-self: flex-start; 
+  align-self: flex-start;
   max-width: 60%;
-  word-wrap: break-word; 
+  word-wrap: break-word;
   /* Using bot-message class */
- background: linear-gradient(
-    to right,
-    #00aaff,
-    #00bfff
-  );
+  background: linear-gradient(to right, #00aaff, #00bfff);
   color: white; /* Dark grey text */
   /* Instagram-like rounded corners */
   border-top-left-radius: 15px;
@@ -331,11 +323,7 @@ body {
   align-items: center;
   padding: 10px; /* Padding */
   border-top: 1px solid #e2e8f0;
- background: linear-gradient(
-    to right,
-    #0288d1,
-    #0056b3
-  );
+  background: linear-gradient(to right, #0288d1, #0056b3);
   flex-shrink: 0; /* Mencegah area input menyusut */
 }
 
@@ -421,7 +409,7 @@ body {
     right: 0;
     bottom: 0;
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
     max-width: none;
     border-radius: 0;
     border: none;
@@ -431,6 +419,10 @@ body {
     padding: 0;
     z-index: var(--z-chatbot-panel);
     background-color: white;
+  }
+
+  .chatbot-panel.active {
+    display: flex;
   }
 
   .chatbot-header {
@@ -490,11 +482,7 @@ body {
   }
 
   .user-message {
-    background: linear-gradient(
-    to right,
-    #00aaff,
-    #0066ff
-  );
+    background: linear-gradient(to right, #00aaff, #0066ff);
     color: white;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -503,11 +491,7 @@ body {
   }
 
   .bot-message {
-     background: linear-gradient(
-    to right,
-    #00aaff,
-    #00bfff
-  );
+    background: linear-gradient(to right, #00aaff, #00bfff);
     color: white;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -527,6 +511,7 @@ body {
 
   .chatbot-input {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
@@ -585,7 +570,6 @@ body {
     background-color: #e0e0e0;
   }
 }
-
 
 :root {
   /* Variabel CSS untuk tema Dynamic Island */
