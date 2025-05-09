@@ -1,13 +1,39 @@
+/* Apply Space Grotesk font */
 body {
   font-family: "Space Grotesk", sans-serif;
-  scroll-behavior: smooth;
-  background-color: #f8f9fa;
+  /* Cool Gradient Background with Animation */
+  background: linear-gradient(#9ddeff, #F5F5FF);
+}
+
+/* Keyframes untuk Animasi Background */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Z-index hierarchy */
+:root {
+  --z-base: 1;
+  --z-sections: 10;
+  --z-header: 30;
+  --z-overlay: 40;
+  --z-dynamic-island: 50;
+  --z-island-content: 51;
+  --z-island-icon: 52;
 }
 
 .section {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s, transform 0.5s;
+  z-index: var(--z-sections);
 }
 
 .section.visible {
@@ -15,66 +41,147 @@ body {
   transform: translateY(0);
 }
 
-.chatbot-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-  font-family: sans-serif; /* Menambahkan font dasar agar konsisten */
+/* Define CSS variables for z-index */
+:root {
+  --z-chatbot: 100;
+  --z-chatbot-button: 101;
+  --z-chatbot-panel: 102;
 }
 
+/* Container for the entire chatbot widget (button + panel) */
+/* This fixed position applies to both desktop and mobile */
+.chatbot-container {
+  position: fixed; /* Position relative to viewport */
+  bottom: 20px; /* Distance from bottom */
+  right: 20px; /* Distance from right */
+  z-index: var(--z-chatbot); /* Use CSS variable */
+  display: flex; /* Use flex to position button and panel */
+  flex-direction: column; /* Stack button/panel vertically */
+  align-items: flex-end; /* Align items to the right */
+  /* Default size for desktop */
+  width: auto;
+  height: auto;
+  max-width: none;
+  border-radius: 0;
+  border: none;
+}
+
+/* Style for the button that shows the chat */
 .chatbot-button {
-  width: 60px;
+  width: 60px; /* Desktop size */
   height: 60px;
-  border-radius: 30px;
-  background-color: #3b82f6;
+  border-radius: 50%; /* Circular button */
+  background-color: #007bff; /* Blue color */
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  z-index: var(--z-chatbot-button); /* Use CSS variable */
 }
 
 .chatbot-button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  background-color: #0056b3; /* Darker blue */
 }
 
+.chatbot-button:active {
+  transform: scale(0.95);
+}
+
+/* Chatbot Panel (Desktop Styles) */
 .chatbot-panel {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  width: 300px;
-  height: 400px;
+  position: absolute; /* Position relative to the container */
+  bottom: 70px; /* Position above the button (button height 60px + 10px gap) */
+  right: 0; /* Align to the right of the container */
+  width: 400px; /* Desktop width */
+  height: 500px; /* Desktop height */
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  display: none; /* Controlled by JS */
-  flex-direction: column;
-  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  display: none; /* Initially hidden */
+  flex-direction: column; /* Menata item secara vertikal */
+  overflow: hidden; /* Penting untuk mencegah scrollbar ganda jika ada overflow lain */
+  transition: width 0.3s ease, height 0.3s ease, bottom 0.3s ease,
+    right 0.3s ease, left 0.3s ease, padding 0.3s ease;
+  z-index: var(--z-chatbot-panel); /* Use CSS variable */
 }
 
+/* JavaScript will add 'display: flex' when active */
+/* .chatbot-panel.active { display: flex; } */
+
+/* Header */
 .chatbot-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  /* Using Tailwind classes in HTML for flex, items-center, justify-between, p-4 */
+  background: linear-gradient(
+    to right,
+    #0288d1,
+    #0056b3
+  ); /* Darker Blue Gradient Header */
+  color: white; /* Text color */
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Lighter border */
+  z-index: 100;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
+.chatbot-header img {
+  /* Targeting the profile pic in header */
+  /* Using Tailwind classes in HTML for w-10, h-10, rounded-full, mr-2 */
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.8); /* White border */
+}
+
+.chatbot-header h2 {
+  /* Targeting the name in header */
+  font-size: 1.125rem; /* Tailwind text-lg */
+  line-height: 1.75rem;
+  font-weight: 700; /* Tailwind font-bold */
+  color: white; /* Ensure text is white */
+}
+
+.close-chatbot {
+  /* Using the ID from user's HTML */
+  /* Using Tailwind classes in HTML for text-white, hover:text-gray-300, w-6, h-6 */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1; /* Align 'X' vertically */
+  transition: color 0.3s ease;
+}
+
+.profile-zoom-effect {
+  /* This class seems intended for a click-to-zoom effect,
+                but the JS for it is not in the provided code.
+                Keeping the style but it won't zoom without the JS logic. */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+  z-index: 100;
+}
+
+/* Style saat gambar dizoom */
+.profile-zoom-effect.is-zoomed {
+  transform: scale(1.3);
+  z-index: 100;
+}
+
+/* Chat Messages Area */
 .chatbot-messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  margin-bottom: 15px;
-  padding-right: 10px; /* Space for scrollbar */
-  display: flex; /* Menggunakan flex untuk tata letak pesan */
-  flex-direction: column; /* Pesan berjejer vertikal */
-  gap: 10px; /* Jarak antar pesan */
-  scroll-behavior: smooth; /* Gulir halus */
+  /* Using the ID from user's HTML */
+  flex-grow: 1; /* Mengambil sisa ruang vertikal */
+  overflow-y: auto; /* Membuat area pesan bisa di-scroll */
+  padding: 10px; /* Padding */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Jarak antar pesan lebih rapat, mirip Instagram */
+  scroll-behavior: smooth;
+  min-height: 0; /* Allows flex-grow to work */
+  background-color: #ffffff; /* White background for messages area */
 }
 
-/* Scrollbar Styling */
 .chatbot-messages::-webkit-scrollbar {
   width: 8px;
 }
@@ -85,116 +192,400 @@ body {
 }
 
 .chatbot-messages::-webkit-scrollbar-thumb {
-  background: #cbd5e1; /* gray-300 */
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 .chatbot-messages::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; /* gray-400 */
+  background: #94a3b8;
 }
 
+/* Styling for individual message container (Flexbox for bubble + pic) */
+.message-container {
+  display: flex;
+  align-items: flex-end; /* Align items to the bottom for tail alignment */
+  max-width: 90%; /* Allow messages to take more width */
+}
+
+.user-message-container {
+  align-self: flex-end; /* Align user container to the right */
+  flex-direction: row-reverse; /* Put profile pic on the right */
+}
+
+.ai-message-container {
+  /* Using ai-message-container as per previous versions, maps to bot in JS */
+  align-self: flex-start; /* Align AI container to the left */
+  flex-direction: row; /* Put profile pic on the left */
+}
+
+.profile-pic {
+  /* Profile picture size in chat area */
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; /* Circular profile picture */
+  object-fit: cover; /* Ensure image covers the area */
+  margin-bottom: 3px; /* Space between pic and message bottom */
+  border: 1px solid #b0bec5; /* Light border around pic */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+}
+
+.user-message-container .profile-pic {
+  /* Profile pic not shown in user bubbles in this design */
+  display: none; /* Hide user profile pic in chat area */
+}
+
+.ai-message-container .profile-pic {
+  /* Using ai-message-container */
+  margin-right: 6px; /* Add right margin for AI pic */
+  margin-left: 0; /* Remove left margin */
+}
+
+/* Message Bubble */
 .message {
-  max-width: 85%;
-  padding: 10px 14px;
-  /* margin-bottom: 10px; /* Dihapus karena sudah ada gap di .chatbot-messages */
-  border-radius: 18px;
+  padding: 8px 10px; /* Padding inside bubble */
+  border-radius: 15px; /* More rounded corners like Instagram */
   line-height: 1.4;
   word-wrap: break-word;
-  overflow-wrap: break-word; /* Alternatif untuk word-wrap */
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  transform-origin: bottom; /* Added for better scale animation */
+  overflow-wrap: break-word;
+  flex-shrink: 1; /* Allow message bubble to shrink */
+  position: relative; /* Needed for pointer */
+  font-size: 0.9em; /* Slightly smaller font */
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.05); /* Very subtle shadow */
 }
 
-.message.visible {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.bot-message {
-  background-color: #f0f1fe; /* indigo-100 with slight transparency */
-  border-top-left-radius: 4px;
-  align-self: flex-start;
+#chatbot-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Bot messages default on the left */
+  gap: 10px; /* Jarak antar pesan */
 }
 
 .user-message {
-  background-color: #3b82f6; /* indigo-600 */
-  color: white;
-  border-top-right-radius: 4px;
-  align-self: flex-end;
-  margin-left: auto;
+  align-self: flex-end; 
+  max-width: 60%;
+  word-wrap: break-word; 
+ background: linear-gradient(
+    to right,
+    #00aaff,
+    #0066ff
+  );
+  color: white; /* White text for contrast */
+  /* Instagram-like rounded corners */
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 3px; /* Less rounded on the tail side */
 }
 
-/* Styling khusus untuk indikator mengetik (dot dots) */
-/* Menggunakan kelas bot-message yang sudah ada untuk latar belakang dan warna teks */
+.bot-message {
+  align-self: flex-start; 
+  max-width: 60%;
+  word-wrap: break-word; 
+  /* Using bot-message class */
+ background: linear-gradient(
+    to right,
+    #00aaff,
+    #00bfff
+  );
+  color: white; /* Dark grey text */
+  /* Instagram-like rounded corners */
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 3px; /* Less rounded on the tail side */
+  border-bottom-right-radius: 15px;
+}
+
+/* Typing Indicator */
 .bot-message.typing-indicator {
-  padding: 10px 14px; /* Pastikan padding sama dengan pesan normal */
-  border-radius: 18px; /* Pastikan border-radius sama */
-  background-color: #f0f1fe; /* Latar belakang sama dengan pesan bot */
-  align-self: flex-start; /* Posisikan di kiri */
-  /* Hapus atau override gaya animasi muncul jika tidak diinginkan untuk indikator */
+  /* Using bot-message.typing-indicator */
+  /* Re-applied styles for the typing indicator bubble */
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  align-self: flex-start;
   transform: none;
   opacity: 1;
   transition: none;
+  font-style: italic;
+  color: white;
+  font-size: 0.9em;
+  /* Ensure it uses the full container width minus profile pic */
+  max-width: calc(90% - 31px - 6px); /* Max width minus pic and margin */
 }
 
-/* Gaya untuk kontainer titik-titik di dalam indikator */
-/* Kelas flex, space-x-2, items-center berasal dari Tailwind */
-.bot-message.typing-indicator .flex.space-x-2 {
+/* Keyframes for bounce animation are kept */
+@keyframes bounce {
+  0%,
+  50%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Input Area */
+.chatbot-input {
+  /* Using the class from user's HTML */
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0;
-  margin: 0;
-}
-
-/* Gaya untuk titik-titik itu sendiri disediakan oleh Tailwind: w-2, h-2, bg-blue-600, rounded-full, animate-bounce */
-
-.chatbot-input {
-  display: flex;
-  align-items: center; /* Align items vertically */
+  padding: 10px; /* Padding */
+  border-top: 1px solid #e2e8f0;
+ background: linear-gradient(
+    to right,
+    #0288d1,
+    #0056b3
+  );
+  flex-shrink: 0; /* Mencegah area input menyusut */
 }
 
 .chatbot-input input {
+  /* Using the ID from user's HTML */
   flex-grow: 1;
-  padding: 10px 14px;
-  border: 2px solid #e2e8f0; /* gray-200 */
-  border-radius: 30px;
-  font-size: 14px;
-  transition: border-color 0.3s;
-  background-color: white;
-  margin-right: 8px; /* Add space between input and button */
+  padding: 8px 12px; /* Less padding */
+  border: 1px solid #b3e5fc; /* Light border */
+  border-radius: 20px; /* Less rounded input */
+  font-size: 0.95em;
+  background-color: white; /* White input background */
+  margin-right: 8px; /* Less margin */
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .chatbot-input input:focus {
-  outline: none;
-  border-color: #3b82f6; /* indigo-600 */
+  border-color: #0288d1; /* Blue focus color */
+  box-shadow: 0 0 4px rgba(2, 136, 209, 0.2);
 }
 
 .chatbot-input button {
-  flex-shrink: 0; /* Prevent button from shrinking */
+  /* Using the ID from user's HTML */
+  /* Using Tailwind classes in HTML for w-5, h-5 */
+  flex-shrink: 0;
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #3b82f6; /* indigo-600 */
+  background-color: #007bff; /* Blue send button */
   color: white;
-  border: none; /* Remove default button border */
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s;
-  padding: 0; /* Remove default padding */
+  padding: 0;
+  outline: none;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
 .chatbot-input button:hover {
-  background-color: #2563eb; /* Warna hover yang sedikit lebih gelap */
+  background-color: #0056b3; /* Darker blue */
 }
 
-.chatbot-input button svg {
-  stroke: white; /* Pastikan ikon Feather berwarna putih */
+.chatbot-input button:active {
+  opacity: 0.8;
 }
+
+/* Tampilan chatbot mode mobile */
+@media (max-width: 768px) {
+  .chatbot-container {
+    bottom: 15px;
+    right: 15px;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 0;
+  }
+
+  .chatbot-button {
+    width: 50px;
+    height: 50px;
+    position: static;
+    margin-bottom: 0;
+  }
+
+  .chatbot-button i {
+    width: 20px;
+    height: 20px;
+  }
+
+  .chatbot-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+    z-index: var(--z-chatbot-panel);
+    background-color: white;
+  }
+
+  .chatbot-header {
+    padding: 15px;
+    font-size: 1.125rem;
+    background: linear-gradient(to right, #0288d1, #0056b3);
+    color: white;
+  }
+
+  .header-info img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .close-chatbot i {
+    width: 24px;
+    height: 24px;
+  }
+
+  .chatbot-messages {
+    padding: 10px;
+    gap: 8px;
+    flex-grow: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  .message-container {
+    max-width: 90%;
+  }
+
+  .profile-pic {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 3px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #b0bec5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-message-container .profile-pic {
+    margin-right: 6px;
+  }
+
+  .user-message-container .profile-pic {
+    display: none;
+  }
+
+  .message {
+    padding: 8px 10px;
+    font-size: 0.9em;
+    border-radius: 15px;
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.05);
+    line-height: 1.4;
+    position: relative;
+  }
+
+  .user-message {
+    background: linear-gradient(
+    to right,
+    #00aaff,
+    #0066ff
+  );
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 3px;
+  }
+
+  .bot-message {
+     background: linear-gradient(
+    to right,
+    #00aaff,
+    #00bfff
+  );
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 15px;
+  }
+
+  .user-message::before {
+    right: -3px;
+    border-right-color: #81c784;
+  }
+
+  .bot-message::before {
+    left: -3px;
+    border-left-color: #e0e0e0;
+  }
+
+  .chatbot-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #f8f9fa;
+    gap: 10px;
+  }
+
+  .chatbot-input input[type="text"] {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.95em;
+    border: 1px solid #b3e5fc;
+    border-radius: 20px;
+    outline: none;
+    background-color: white;
+  }
+
+  .chatbot-input input:focus {
+    border-color: #0288d1;
+    box-shadow: 0 0 4px rgba(2, 136, 209, 0.2);
+  }
+
+  .chatbot-input button {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chatbot-input button:hover {
+    background-color: #0056b3;
+  }
+
+  .chatbot-input button:active {
+    opacity: 0.8;
+  }
+
+  .typing-indicator {
+    padding: 8px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-style: italic;
+    color: white;
+  }
+
+  .bot-message.typing-indicator {
+    max-width: calc(90% - 31px - 6px);
+    background-color: #e0e0e0;
+  }
+}
+
 
 :root {
   /* Variabel CSS untuk tema Dynamic Island */
@@ -221,10 +612,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); /* shadow lembut */
+  z-index: var(--z-dynamic-island);
+  box-shadow: 0 0px 12px 4px rgba(0, 0, 0, 0.35); /* shadow lembut */
   transform-origin: center;
-  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
@@ -240,6 +630,7 @@ body {
   position: relative;
   transition: all 0.3s ease;
   font-family: sans-serif;
+  z-index: var(--z-island-content);
 }
 
 /* Ukuran island dalam keadaan default */
@@ -251,27 +642,17 @@ body {
 /* Ukuran island saat diperluas */
 .island-expanded {
   width: 320px;
-  height: 250px;
-}
-
-/* Ikon dalam island (biasanya burger/menu) */
-.island-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  transition: all 0.3s ease;
+  height: 200px;
 }
 
 /* Animasi muncul (pop in) */
 @keyframes popIn {
   0% {
-    transform: translateX(-50%) scale(0.9);
+    transform: translateX(-50%) scale(0.5);
     opacity: 0;
   }
   50% {
-    transform: translateX(-50%) scale(1.05);
+    transform: translateX(-50%) scale(1);
     opacity: 0.5;
   }
   100% {
@@ -287,11 +668,11 @@ body {
     opacity: 1;
   }
   50% {
-    transform: translateX(-50%) scale(1.05);
+    transform: translateX(-50%) scale(1);
     opacity: 0.5;
   }
   100% {
-    transform: translateX(-50%) scale(0.9);
+    transform: translateX(-50%) scale(0.5);
     opacity: 0;
   }
 }
@@ -352,48 +733,6 @@ body {
   }
 }
 
-/* Ikon menu burger */
-.menu-icon {
-  position: relative;
-  width: 18px;
-  height: 14px;
-  cursor: pointer;
-}
-
-.menu-icon span {
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background-color: white;
-  transition: all 0.3s ease;
-  border-radius: 2px;
-}
-
-.menu-icon span:nth-child(1) {
-  top: 0;
-}
-
-.menu-icon span:nth-child(2) {
-  top: 6px;
-}
-
-.menu-icon span:nth-child(3) {
-  top: 12px;
-}
-
-/* Ketika menu burger aktif, berubah jadi "X" */
-.menu-icon.active span:nth-child(1) {
-  transform: rotate(45deg) translate(4px, 5px);
-}
-
-.menu-icon.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.menu-icon.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(4px, -5px);
-}
-
 /* Efek transisi antar section */
 .section {
   transition: all 0.5s ease;
@@ -410,17 +749,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Colors for different sections */
-#home {
-  background-color: #f5f5f7;
-}
-#about {
-  background-color: #eaeaec;
-}
-#services {
-  background-color: #e0e0e2;
-}
-
 /* Overlay saat island diperluas (background hitam transparan) */
 .overlay {
   position: fixed;
@@ -429,7 +757,7 @@ body {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 40;
+  z-index: var(--z-overlay);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -540,5 +868,170 @@ body {
   }
   50% {
     opacity: 0;
+  }
+}
+
+/* Section Skills */
+/* Hide scrollbar for projects section similar to skills */
+.kartu-skill {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.kartu-skill::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Tambahkan ini ke file CSS Anda atau dalam tag <style> */
+@layer components {
+  /* Kelas kartu-skill sudah ada di HTML yang dirapikan */
+  .kartu-skill {
+    /* Biarkan kelas-kelas Tailwind yang ada (transition, transform, shadow, hover effects) */
+    /* Tambahkan ini jika belum ada atau ingin menimpa yang bawaan */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transform: translateY(0); /* Pastikan ada base transform untuk transisi */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Pastikan ada base shadow */
+    position: relative; /* Berguna jika butuh pseudo-element */
+  }
+
+  .kartu-skill:hover {
+    transform: translateY(-8px); /* Mengangkat sedikit */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Bayangan yang lebih besar */
+    /* Anda bisa menambahkan rotateY atau rotateX di sini juga */
+    /* transform: translateY(-8px) rotateY(5deg); */
+  }
+
+  /* Animasi untuk Ikon saat Kartu di-hover */
+  .kartu-skill:hover img,
+  .kartu-skill:hover svg {
+    transform: scale(1.1); /* Ikon membesar sedikit */
+    transition: transform 0.3s ease-in-out;
+    filter: brightness(1.1); /* Sedikit mencerahkan ikon */
+  }
+
+  /* Khusus SVG (untuk ikon C#), target path di dalamnya jika ingin mengubah warna bagian */
+  .kartu-skill:hover svg path {
+    transition: fill 0.3s ease-in-out;
+    /* Ganti warna fill sesuai keinginan saat hover */
+    /* fill: #8a3d9c; */ /* Contoh warna yang sedikit berbeda */
+  }
+
+  /* Animasi untuk Judul Skill saat Kartu di-hover */
+  .kartu-skill:hover h3 {
+    color: #1d4ed8; /* Ubah warna teks judul (biru yang lebih gelap dari blue-600) */
+    transition: color 0.3s ease-in-out;
+    text-shadow: 0 0 5px rgba(59, 130, 246, 0.4); /* Tambahkan bayangan teks halus */
+  }
+
+  /* Animasi untuk Bar Progress saat Kartu di-hover */
+  .kartu-skill:hover .bg-blue-500 {
+    background-color: #60a5fa; /* Ubah warna bar menjadi sedikit lebih terang */
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.8); /* Tambahkan cahaya biru pada bar */
+    /* Optional: Sedikit memanjangkan bar */
+    /* transform: scaleX(1.01); */
+    /* transform-origin: left center; */
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
+  }
+
+  /* Pastikan elemen di dalam kartu punya transisi dasar */
+  .kartu-skill img,
+  .kartu-skill svg,
+  .kartu-skill h3,
+  .kartu-skill .bg-blue-500 {
+    transition: all 0.3s ease-in-out; /* Tambahkan transisi dasar ini */
+  }
+}
+
+/* untuk H1 nama */
+
+@layer components {
+  /* Kelas dasar h1 tetap */
+  .h1-underline-glow {
+    /* Tambahkan bayangan teks halus pada seluruh h1 (opsional) */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    /* Pastikan ada base transform jika Anda ingin efek angkat h1 saat hover */
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Optional: Efek angkat h1 saat hover */
+  .h1-underline-glow:hover {
+    transform: translateY(-2px); /* Angkat sedikit saat hover */
+  }
+
+  /* Styling untuk kedua span pembungkus teks */
+  .h1-underline-glow .underline-part-black,
+  .h1-underline-glow .underline-part-blue {
+    position: relative; /* Penting untuk positioning absolute ::after */
+    display: inline-block; /* Agar span mengikuti lebar teks dan position relative bekerja */
+  }
+
+  /* Styling dasar untuk pseudo-element garis bawah pada kedua span */
+  .h1-underline-glow .underline-part-black::after,
+  .h1-underline-glow .underline-part-blue::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* Posisi garis bawah (sesuaikan) */
+    left: 0;
+    width: 0; /* Lebar awal 0 (akan dianimasikan) */
+    height: 3px; /* Ketebalan garis (sesuaikan) */
+    transition: width 0.4s ease-in-out; /* Animasi lebar (0.4s durasi) */
+  }
+
+  /* Warna garis bawah khusus untuk bagian "Hi! I'm" (hitam) */
+  .h1-underline-glow .underline-part-black::after {
+    background-color: #000; /* Warna hitam solid */
+    /* Tidak perlu delay di sini, animasi mulai segera */
+    transition-delay: 0s;
+  }
+
+  /* Warna garis bawah khusus untuk bagian "Dika" (biru) */
+  .h1-underline-glow .underline-part-blue::after {
+    background-color: #3b82f6; /* Warna biru Tailwind blue-600 */
+    /* -------- Tambahkan DELAY di sini -------- */
+    transition-delay: 0.4s; /* Tunda selama durasi animasi garis bawah hitam (0.4s) */
+  }
+
+  /* ----------- Animasi Garis Bawah Saat h1 di-hover ----------- */
+  .h1-underline-glow:hover .underline-part-black::after,
+  .h1-underline-glow:hover .underline-part-blue::after {
+    width: 100%; /* Lebar menjadi penuh saat h1 di-hover */
+    /* Penting: Setel ulang delay menjadi 0 saat hover agar animasi berjalan */
+    /* Ini memastikan animasi reverse (saat mouse keluar) juga berjalan bergantian */
+    transition-delay: 0s;
+  }
+
+  /* ----------- Animasi Reverse (Mouse Keluar) ----------- */
+  /* Untuk animasi reverse yang bergantian, kita perlu delay lagi */
+  .h1-underline-glow .underline-part-black::after {
+    /* Delay untuk kembali ke width: 0 saat mouse keluar */
+    transition-delay: 0.4s; /* Delay 0.4s agar biru hilang duluan baru hitam */
+  }
+  .h1-underline-glow .underline-part-blue::after {
+    /* Delay untuk kembali ke width: 0 saat mouse keluar */
+    transition-delay: 0s; /* Hilang tanpa delay */
+  }
+}
+
+/* Project section */
+
+/* Hide scrollbar for projects section similar to skills */
+.projects {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.projects::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Add responsive behavior */
+@media (min-width: 768px) {
+  .projects {
+    display: grid;
+    overflow: visible;
   }
 }

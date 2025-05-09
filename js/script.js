@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const textElement = document.getElementById("typing-text");
-  const texts = ["UI/UX Designer", "Frontend Developer", "Content Creator"];
+  const texts = ["UI/UX Designer", "FullStack Developer", "Content Creator"];
 
   let textIndex = 0;
   let charIndex = 0;
@@ -178,7 +178,10 @@ function initChatbot() {
     // Tambahkan pesan awal dari bot hanya jika panel ditampilkan dan belum ada pesan
     if (isHidden && chatbotMessages.children.length === 0) {
       removeTypingIndicator(); // Pastikan tidak ada indikator jika ini adalah pesan awal
-      addMessage("Halo! Aku Dika AI, Apa yang bisa aku bantu?", "bot");
+      addMessage(
+        "Halo! Aku Jeccelyn asisten Dika, Ada yang bisa aku bantu?",
+        "bot"
+      );
     }
     // Anda bisa menambahkan logika lain di sini jika panel ditutup
     // Contoh: membersihkan pesan saat menutup
@@ -187,12 +190,31 @@ function initChatbot() {
     // }
   }
 
+  function toggleChatbotPanel() {
+    const isHidden = chatbotPanel.style.display !== "flex";
+    chatbotPanel.style.display = isHidden ? "flex" : "none";
+
+    // Jika panel terbuka dan belum ada pesan, tambahkan pesan awal
+    if (isHidden && chatbotMessages.children.length === 0) {
+      removeTypingIndicator(); // Bersihkan indikator typing dulu
+
+      setTimeout(() => {
+        const msgEl = addMessage(
+          "Halo! Aku Jeccelyn asisten Dika, Ada yang bisa aku bantu?",
+          "bot"
+        );
+        msgEl.classList.add("pop-in"); // Tambahkan animasi pop-in setelah pesan dimasukkan
+      }, 300); // Delay sedikit supaya lebih natural
+    }
+  }
+
   // Toggle panel chatbot saat tombol mengambang diklik
   chatbotToggle.addEventListener("click", toggleChatbotPanel);
 
-  // Tutup chatbot saat tombol tutup diklik
+  // Tutup chatbot saat tombol tutup diklik dan hapus riwayat chat
   closeButton.addEventListener("click", () => {
-    chatbotPanel.style.display = "none";
+    chatbotPanel.style.display = "none"; // Menyembunyikan panel chatbot
+    chatbotMessages.innerHTML = ""; // Menghapus semua riwayat chat
   });
 
   // --- Tambahkan event listener untuk tautan "Let's Talk" ---
@@ -287,20 +309,20 @@ function initChatbot() {
     chatbotMessages.appendChild(messageElement); // Tambahkan elemen pesan ke DOM
 
     let index = 0;
-    const typingSpeed = 20; // Kecepatan mengetik (ms) - Anda bisa menyesuaikannya
+    const typingSpeed = 0; // Kecepatan mengetik (ms) - Anda bisa menyesuaikannya
 
     const interval = setInterval(() => {
       if (index < text.length) {
         span.textContent += text.charAt(index);
         index++;
-        // Gulirkan ke bawah setiap kali karakter ditambahkan
+        // Auto-scroll during typing
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
       } else {
         clearInterval(interval);
-        // Terapkan kelas visible setelah selesai mengetik
-        setTimeout(() => {
-          messageElement.classList.add("visible");
-        }, 50);
+        // Make message fully visible after typing and ensure it's scrolled into view
+        messageElement.classList.add("visible");
+        // Force one final scroll to ensure the message is completely visible
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
       }
     }, typingSpeed);
 
@@ -318,9 +340,9 @@ function initChatbot() {
     thinkingEl.classList.add("typing-indicator");
     // Struktur HTML untuk titik-titik animasi (menggunakan kelas Tailwind)
     thinkingEl.innerHTML = `<div class="flex space-x-2 items-center">
-          <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-          <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-          <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+          <div class="w-2 h-2 bg-blue-900 rounded-full animate-bounce"></div>
+          <div class="w-2 h-2 bg-blue-900 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+          <div class="w-2 h-2 bg-blue-900 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
       </div>`;
 
     // Tambahkan indikator SEBELUM melakukan panggilan API
@@ -387,7 +409,6 @@ function initChatbot() {
     }
   }
 }
-
 // Jalankan inisialisasi chatbot setelah seluruh halaman dimuat
 document.addEventListener("DOMContentLoaded", initChatbot);
 
@@ -528,101 +549,66 @@ indicators.forEach((indicator) => {
   });
 });
 
-const body = document.body;
-const numTrailElements = 20; // Jumlah titik dalam jejak
-const trailElements = []; // Array untuk menyimpan elemen-elemen trail
-const mousePos = { x: 0, y: 0 }; // Menyimpan posisi kursor mouse
-const easingFactor = 0.15; // Faktor pelambatan (semakin kecil, semakin lambat/halus jejaknya)
-
-// Membuat elemen-elemen trail dan menambahkannya ke body
-for (let i = 0; i < numTrailElements; i++) {
-  const trailElement = document.createElement("div");
-  trailElement.classList.add("cursor-trail");
-  body.appendChild(trailElement);
-  trailElements.push(trailElement);
-}
-
-// Event listener untuk melacak pergerakan mouse
-window.addEventListener("mousemove", (e) => {
-  // Memperbarui posisi target mouse
-  mousePos.x = e.clientX;
-  mousePos.y = e.clientY;
-});
-
-// Fungsi animasi untuk memperbarui posisi elemen trail
-function animateTrail() {
-  // Target posisi untuk elemen pertama adalah posisi mouse
-  let targetX = mousePos.x;
-  let targetY = mousePos.y;
-
-  // Loop melalui setiap elemen trail
-  for (let i = 0; i < trailElements.length; i++) {
-    const currentElement = trailElements[i];
-
-    // Hitung posisi baru elemen menggunakan easing
-    // Posisi baru = posisi saat ini + (target posisi - posisi saat ini) * faktor pelambatan
-    // Kita menyimpan posisi aktual di properti kustom (misalnya, element._x, element._y)
-    // karena style.left/top mungkin tidak segera mencerminkan posisi render
-    currentElement._x = currentElement._x || targetX; // Inisialisasi jika belum ada
-    currentElement._y = currentElement._y || targetY; // Inisialisasi jika belum ada
-
-    currentElement._x += (targetX - currentElement._x) * easingFactor;
-    currentElement._y += (targetY - currentElement._y) * easingFactor;
-
-    // Terapkan posisi baru ke style CSS menggunakan transform
-    // Menggunakan Math.round() untuk menghindari nilai pecahan yang terlalu kecil
-    currentElement.style.transform = `translate(${Math.round(
-      currentElement._x
-    )}px, ${Math.round(currentElement._y)}px)`;
-
-    // Target posisi untuk elemen berikutnya adalah posisi elemen saat ini sebelum diperbarui
-    // (atau bisa juga posisi setelah diperbarui, tergantung efek yang diinginkan.
-    // Menggunakan posisi sebelum diperbarui memberikan efek jejak yang lebih jelas)
-    // Untuk efek jejak yang lebih halus, target elemen i+1 adalah posisi *setelah* update elemen i
-    targetX = currentElement._x;
-    targetY = currentElement._y;
-  }
-
-  // Meminta frame animasi berikutnya
-  requestAnimationFrame(animateTrail);
-}
-
-// Memulai animasi
-animateTrail();
-
-// Switch gambar saat tombol diklik profile
+// Array of image sources
 let imageSources = [
-  "https://aws-images-prod.sindonews.net/dyn/600/pena/sindo-article/original/2022/04/16/ANIME0010.jpg",
-  "https://shopee.co.id/inspirasi-shopee/wp-content/uploads/2022/03/gintoki.webp",
-  "https://shopee.co.id/inspirasi-shopee/wp-content/uploads/2022/03/my-dress-up-darling.webp",
+  "assets/img/me1.png",
+  "assets/img/me2.png",
 ];
+
+// Index of the currently displayed image in the imageSources array
 let currentImageIndex = 0;
 
-document.getElementById("myButton").addEventListener("click", function () {
-  currentImageIndex = (currentImageIndex + 1) % imageSources.length; // Loop melalui array gambar
-  document.getElementById("myImage").src = imageSources[currentImageIndex];
+// Get references to the image elements and the button
+const myImageElement = document.getElementById("myImage");
+const overlayImageElement = document.getElementById("overlayImage"); // Reference to the image inside bgOverlay
+const myButtonElement = document.getElementById("myButton");
+
+// Function to update both the main image and the overlay image
+function updateImages() {
+  // Set the main image source to the current image in the sequence
+  myImageElement.src = imageSources[currentImageIndex];
+
+  // Calculate the index for the overlay image.
+  // This is the image that comes *after* the current image.
+  // The modulo operator (%) ensures we loop back to the start of the array.
+  let overlayIndex = (currentImageIndex + 1) % imageSources.length;
+
+  // Set the overlay image source to the next image in the sequence
+  overlayImageElement.src = imageSources[overlayIndex];
+}
+
+// --- Initialization ---
+// Call updateImages() once when the script loads to set the initial images
+updateImages();
+
+// --- Event Listener for the Button ---
+// Add a click event listener to the button
+myButtonElement.addEventListener("click", function () {
+  // Increment the current image index to move to the next image
+  // The modulo operator (%) makes the sequence loop
+  currentImageIndex = (currentImageIndex + 1) % imageSources.length;
+
+  // Call the updateImages function to change the image sources based on the new index
+  updateImages();
 });
 
-// Konfigurasi Tailwind - Idealnya ini berada di file tailwind.config.js
-// atau di dalam tag <script> yang mengkonfigurasi Tailwind jika menggunakan CDN dengan konfigurasi kustom.
-// Disimpan di sini sesuai struktur kode asli yang diberikan.
-tailwind.config = {
-  theme: {
-    extend: {
-      animation: {
-        "fade-in": "fadeIn 0.3s ease-in-out",
-        "fade-out": "fadeOut 0.3s ease-in-out",
-      },
-      keyframes: {
-        fadeIn: {
-          "0%": { opacity: "0", transform: "translateY(-10px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        fadeOut: {
-          "0%": { opacity: "1", transform: "translateY(0)" },
-          "100%": { opacity: "0", transform: "translateY(-10px)" },
-        },
-      },
-    },
-  },
-};
+// Zoom profile Ai
+document.addEventListener("DOMContentLoaded", (event) => {
+  const profileImage = document.querySelector(".profile-zoom-effect");
+
+  if (profileImage) {
+    profileImage.addEventListener("click", (event) => {
+      event.stopPropagation();
+      profileImage.classList.toggle("is-zoomed");
+    });
+
+    document.addEventListener("click", (event) => {
+      if (
+        profileImage.classList.contains("is-zoomed") &&
+        !profileImage.contains(event.target)
+      ) {
+        profileImage.classList.remove("is-zoomed");
+      }
+    });
+  }
+});
