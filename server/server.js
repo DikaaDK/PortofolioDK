@@ -23,7 +23,7 @@ const together = new Together({
     "2189514e013188e5feff5cdf6d5d558055c7e0a9f06f17ca56b62b46e20f15e6",
 });
 
-app.post("/api/chatai", async (req, res) => {
+app.post("https://portofoliodk.up.railway.app/api/chatai", async (req, res) => {
   try {
     const { message = "" } = req.body;
 

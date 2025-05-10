@@ -335,7 +335,7 @@ function initChatbot() {
     try {
       // Lakukan request fetch ke API backend Anda
       // !!! PASTIKAN BACKEND SERVER DI http://localhost:3000 BERJALAN !!!
-      const response = await fetch("http://localhost:3000/api/chatai", {
+      const response = await fetch("https://portofoliodk.up.railway.app/api/chatai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }), // Kirim pesan pengguna dalam format JSON
